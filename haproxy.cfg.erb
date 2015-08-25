@@ -1,0 +1,34 @@
+global
+  daemon
+  user root
+  group root
+  pidfile <%= pid_file %>
+
+defaults
+  mode http
+  maxconn 50000
+  timeout client 3600s
+  timeout connect 1s
+  timeout queue 5s
+  timeout server 3600s
+
+
+listen stats
+  bind *:<%= stats %>
+  mode http
+  stats enable
+  stats uri /
+  stats auth <%= login %>:<%= pass %>
+
+
+listen TOR-in
+  bind *:<%= port %>
+  mode tcp
+  default_backend TOR
+  balance roundrobin
+
+backend TOR
+  mode tcp
+  <% backends.each do |b| %>
+  server <%= b[:addr] %>:<%= b[:port] %> <%= b[:addr] %>:<%= b[:port] %> check
+  <% end %>
