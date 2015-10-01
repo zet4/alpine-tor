@@ -13,6 +13,6 @@ ADD haproxy.cfg.erb /usr/local/etc/haproxy.cfg.erb
 ADD start.rb /usr/local/bin/start.rb
 RUN chmod +x /usr/local/bin/start.rb
 
-EXPOSE 2090 5566
+EXPOSE 5566
 
 CMD ruby /usr/local/bin/start.rb
