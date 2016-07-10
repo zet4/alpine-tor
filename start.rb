@@ -155,10 +155,10 @@ module Service
       @config_erb_path = "/usr/local/etc/haproxy.cfg.erb"
       @config_path = "/usr/local/etc/haproxy.cfg"
       @backends = []
-      @stats = ENV['stats'] || 2090
-      @login = ENV['login'] || 'admin'
-      @pass = ENV['pass'] || 'admin'
-      @port = ENV['port'] || 5566
+      @stats = ENV['haproxy_stats'] || 2090
+      @login = ENV['haproxy_login'] || 'admin'
+      @pass = ENV['haproxy_pass'] || 'admin'
+      @port = ENV['haproxy_port'] || 5566
     end
 
     def start
@@ -186,6 +186,28 @@ module Service
       File.write(@config_path, ERB.new(File.read(@config_erb_path)).result(binding))
     end
   end
+
+  class Privoxy < Base
+    attr_reader :haproxy
+
+    def initialize()
+      @config_erb_path = "/usr/local/etc/privoxy.cfg.erb"
+      @config_path = "/usr/local/etc/privoxy.cfg"
+      @port = ENV['privoxy_port'] || 8118
+      @haproxy = ENV['haproxy_port'] || 5566
+    end
+
+    def start
+      super
+      compile_config
+      self.class.fire_and_forget(executable, "--no-daemon", "#{@config_path}", "| logger 2>&1")
+    end
+
+    private
+    def compile_config
+      File.write(@config_path, ERB.new(File.read(@config_erb_path)).result(binding))
+    end
+  end
 end
 
 
@@ -202,6 +224,11 @@ end
 
 haproxy.start
 
+if ENV['privoxy']
+  privoxy = Service::Privoxy.new
+  privoxy.start
+end
+
 sleep 60
 
 loop do
@@ -210,7 +237,7 @@ loop do
     $logger.info "testing proxy #{proxy.id} (port #{proxy.port})"
     proxy.restart unless proxy.working?
     $logger.info "sleeping for #{tor_instances} seconds"
-    sleep tor_instances
+    sleep Integer(tor_instances)
   end
 
   $logger.info "sleeping for 60 seconds"
