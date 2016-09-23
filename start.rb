@@ -84,7 +84,8 @@ module Service
 
   class Tor < Base
 
-    def initialize()
+    def initialize(port)
+      @port = port
       @new_circuit_period = ENV['new_circuit_period'] || 120
     end
 
