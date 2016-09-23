@@ -83,6 +83,7 @@ module Service
 
 
   class Tor < Base
+    attr_reader :new_circuit_period
 
     def initialize(port)
       @port = port
