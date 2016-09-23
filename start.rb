@@ -83,6 +83,11 @@ module Service
 
 
   class Tor < Base
+
+    def initialize()
+      @new_circuit_period = ENV['new_circuit_period'] || 120
+    end
+
     def data_directory
       "#{super}/#{port}"
     end
@@ -91,7 +96,7 @@ module Service
       super
       self.class.fire_and_forget(executable,
                                  "--SocksPort #{port}",
-                                 "--NewCircuitPeriod 120",
+                                 "--NewCircuitPeriod #{new_circuit_period}",
                                  "--DataDirectory #{data_directory}",
                                  "--PidFile #{pid_file}",
                                  "--Log \"warn syslog\"",
