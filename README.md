@@ -23,7 +23,8 @@ Optionaly adds support for [Privoxy](https://www.privoxy.org/) using `-e privoxy
 
 Environment Variables
 -----
- * `tors` - Integer, number of tor instances to  run.
+ * `tors` - Integer, number of tor instances to run.
+ * `new_circuit_period` - Integer, NewCircuitPeriod parameter value.
  * `privoxy` - Boolean, whatever to run insance of privoxy in front of haproxy.
  * `privoxy_port` - Integer, port for privoxy.
  * `haproxy_port` - Integer, port for haproxy.
