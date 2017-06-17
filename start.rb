@@ -84,10 +84,14 @@ module Service
 
   class Tor < Base
     attr_reader :new_circuit_period
+    attr_reader :max_circuit_dirtiness
+    attr_reader :circuit_build_timeout
 
     def initialize(port)
       @port = port
       @new_circuit_period = ENV['new_circuit_period'] || 120
+      @max_circuit_dirtiness = ENV['max_circuit_dirtiness'] || 600
+      @circuit_build_timeout = ENV['circuit_build_timeout'] || 60
     end
 
     def data_directory
@@ -99,6 +103,8 @@ module Service
       self.class.fire_and_forget(executable,
                                  "--SocksPort #{port}",
                                  "--NewCircuitPeriod #{new_circuit_period}",
+                                 "--MaxCircuitDirtiness #{max_circuit_dirtiness}",
+                                 "--CircuitBuildTimeout #{circuit_build_timeout}",
                                  "--DataDirectory #{data_directory}",
                                  "--PidFile #{pid_file}",
                                  "--Log \"warn syslog\"",
