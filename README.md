@@ -24,7 +24,9 @@ Optionaly adds support for [Privoxy](https://www.privoxy.org/) using `-e privoxy
 Environment Variables
 -----
  * `tors` - Integer, number of tor instances to run.
- * `new_circuit_period` - Integer, NewCircuitPeriod parameter value.
+ * `new_circuit_period` - Integer, NewCircuitPeriod parameter value in seconds. (Default: 2 minutes)
+ * `max_circuit_dirtiness` - Integer, MaxCircuitDirtiness parameter value in seconds. (Default: 10 minutes)
+ * `circuit_build_timeout` - Integer, CircuitBuildTimeout parameter value in seconds. (Default: 60 seconds)
  * `privoxy` - Boolean, whatever to run insance of privoxy in front of haproxy.
  * `privoxy_port` - Integer, port for privoxy.
  * `haproxy_port` - Integer, port for haproxy.
