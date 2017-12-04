@@ -145,13 +145,17 @@ module Service
     alias_method :port, :tor_port
 
     def test_url
-      ENV['test_url'] || 'http://echoip.com/'
+      ENV['test_url'] || 'http://google.com'
+    end
+
+    def test_status
+      ENV['test_status'] || '302'
     end
 
     def working?
       uri = URI.parse(test_url)
       Net::HTTP.SOCKSProxy('127.0.0.1', port).start(uri.host, uri.port) do |http|
-        http.get(uri.path).code=='200'
+        http.get(uri.path).code==test_status
       end
     rescue
       false
