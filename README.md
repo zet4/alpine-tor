@@ -19,19 +19,29 @@ Parents
 __Why:__ Lots of IP addresses. One single endpoint for your client.
 Load-balancing by HAproxy.
 
-Optionaly adds support for [Privoxy](https://www.privoxy.org/) using `-e privoxy=1`, useful for http (default `8118`, changable via `-e privoxy_port=<port>`) proxy forward and ad removal.
+Optionaly adds support for [Privoxy](https://www.privoxy.org/) using
+`-e privoxy=1`, useful for http (default `8118`, changable via
+`-e privoxy_port=<port>`) proxy forward and ad removal.
 
 Environment Variables
 -----
- * `tors` - Integer, number of tor instances to run.
- * `new_circuit_period` - Integer, NewCircuitPeriod parameter value in seconds. (Default: 2 minutes)
- * `max_circuit_dirtiness` - Integer, MaxCircuitDirtiness parameter value in seconds. (Default: 10 minutes)
- * `circuit_build_timeout` - Integer, CircuitBuildTimeout parameter value in seconds. (Default: 60 seconds)
+ * `tors` - Integer, number of tor instances to run. (Default: 20)
+ * `new_circuit_period` - Integer, NewCircuitPeriod parameter value in seconds.
+   (Default: 2 minutes)
+ * `max_circuit_dirtiness` - Integer, MaxCircuitDirtiness parameter value in
+   seconds. (Default: 10 minutes)
+ * `circuit_build_timeout` - Integer, CircuitBuildTimeout parameter value in
+   seconds. (Default: 60 seconds)
  * `privoxy` - Boolean, whatever to run insance of privoxy in front of haproxy.
- * `privoxy_port` - Integer, port for privoxy.
- * `haproxy_port` - Integer, port for haproxy.
- * `haproxy_stats` - Integer, port for haproxy monitor.
+ * `privoxy_port` - Integer, port for privoxy. (Default: 8118)
+ * `haproxy_port` - Integer, port for haproxy. (Default: 5566)
+ * `haproxy_stats` - Integer, port for haproxy monitor. (Default: 2090)
  * `haproxy_login` and `haproxy_pass` - BasicAuth config for haproxy monitor.
+   (Default: `admin` in both variables)
+ * `test_url` - URL for health check throught Tor proxy.
+   (Default: http://google.com)
+ * `test_status` - Integer, HTTP status code for `test_url` in working case.
+   (Default: 302)
 
 Usage
 -----
@@ -50,22 +60,23 @@ docker run -d -p 5566:5566 -p 2090:2090 -e tors=25 zeta0/alpine-tor
 docker run -d -p 8118:8118 -p 2090:2090 -e tors=25 -e privoxy=1 zeta0/alpine-tor
 
 # test with ...
-curl --socks5 localhost:5566 http://echoip.com
+curl --socks5 localhost:5566 http://httpbin.org/ip
 
 # or if privoxy enabled ...
-curl --proxy localhost:8118 http://echoip.com
+curl --proxy localhost:8118 http://httpbin.org/ip
 
 # or to run chromium with your new found proxy
-chromium --proxy-server="http://localhost:8118" --host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"
+chromium --proxy-server="http://localhost:8118" \
+    --host-resolver-rules="MAP * 0.0.0.0 , EXCLUDE localhost"
 
-# monitor 
+# monitor
 # auth login:admin
 # auth pass:admin
 http://localhost:2090 or http://admin:admin@localhost:2090
 
 # start docket container with new auth
-docker run -d -p 5566:5566 -p 2090:2090 -e haproxy_login=MySecureLogin -e haproxy_pass=MySecurePassword zeta0/alpine-tor
-
+docker run -d -p 5566:5566 -p 2090:2090 -e haproxy_login=MySecureLogin \
+    -e haproxy_pass=MySecurePassword zeta0/alpine-tor
 ```
 
 Further Readings
