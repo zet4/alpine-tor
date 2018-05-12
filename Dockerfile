@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add libressl2.7-libcrypto tor --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/community/ --allow-untrusted haproxy ruby privoxy
+RUN apk add 'tor=0.3.1.9-r0' --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/community/ --allow-untrusted haproxy ruby privoxy
 
 RUN apk --update add --virtual build-dependencies ruby-bundler ruby-dev  \
   && apk add ruby-nokogiri --update-cache --repository http://dl-4.alpinelinux.org/alpine/v3.3/main/ \
