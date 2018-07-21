@@ -34,6 +34,8 @@ Environment Variables
    seconds. (Default: 60 seconds)
  * `privoxy` - Boolean, whatever to run insance of privoxy in front of haproxy.
  * `privoxy_port` - Integer, port for privoxy. (Default: 8118)
+ * `privoxy_permit` - Space-separated list of source addresses for permit-access option. (Default: Unset)
+ * `privoxy_deny` - Space-separated list of source addresses for deny-access option. (Default: Unset)
  * `haproxy_port` - Integer, port for haproxy. (Default: 5566)
  * `haproxy_stats` - Integer, port for haproxy monitor. (Default: 2090)
  * `haproxy_login` and `haproxy_pass` - BasicAuth config for haproxy monitor.
