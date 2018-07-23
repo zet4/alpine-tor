@@ -206,12 +206,16 @@ module Service
 
   class Privoxy < Base
     attr_reader :haproxy
+    attr_reader :permit
+    attr_reader :deny
 
     def initialize()
       @config_erb_path = "/usr/local/etc/privoxy.cfg.erb"
       @config_path = "/usr/local/etc/privoxy.cfg"
       @port = ENV['privoxy_port'] || 8118
       @haproxy = ENV['haproxy_port'] || 5566
+      @permit = ENV['privoxy_permit'] || ""
+      @pdeny = ENV['privoxy_deny'] || ""
     end
 
     def start
