@@ -1,6 +1,9 @@
-FROM alpine
+FROM alpine:edge
 
-RUN apk add tor --update-cache --repository http://dl-4.alpinelinux.org/alpine/edge/community/ --allow-untrusted haproxy ruby privoxy
+RUN apk add 'tor' --no-cache \
+  --repository http://dl-cdn.alpinelinux.org/alpine/edge/community \
+  --repository http://dl-cdn.alpinelinux.org/alpine/edge/main \
+  --allow-untrusted haproxy ruby privoxy
 
 RUN apk --update add --virtual build-dependencies ruby-bundler ruby-dev  \
   && apk add ruby-nokogiri --update-cache --repository http://dl-4.alpinelinux.org/alpine/v3.3/main/ \
