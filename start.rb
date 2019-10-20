@@ -86,6 +86,7 @@ module Service
     attr_reader :new_circuit_period
     attr_reader :max_circuit_dirtiness
     attr_reader :circuit_build_timeout
+    attr_reader :bridges
 
     def initialize(port)
       @config_erb_path = "/usr/local/etc/torrc.erb"
@@ -93,6 +94,7 @@ module Service
       @new_circuit_period = ENV['new_circuit_period'] || 120
       @max_circuit_dirtiness = ENV['max_circuit_dirtiness'] || 600
       @circuit_build_timeout = ENV['circuit_build_timeout'] || 60
+      @bridges = ENV.has_key?('tor_bridges') ? ENV['tor_bridges'].split(';') : []
     end
 
     def data_directory
