@@ -44,6 +44,7 @@ Environment Variables
    (Default: http://google.com)
  * `test_status` - Integer, HTTP status code for `test_url` in working case.
    (Default: 302)
+ * `tor_bridges` - A semicolon(;) seperated list of obfs4 bridges.
 
 Usage
 -----

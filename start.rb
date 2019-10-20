@@ -86,30 +86,36 @@ module Service
     attr_reader :new_circuit_period
     attr_reader :max_circuit_dirtiness
     attr_reader :circuit_build_timeout
+    attr_reader :bridges
 
     def initialize(port)
+      @config_erb_path = "/usr/local/etc/torrc.erb"
       @port = port
       @new_circuit_period = ENV['new_circuit_period'] || 120
       @max_circuit_dirtiness = ENV['max_circuit_dirtiness'] || 600
       @circuit_build_timeout = ENV['circuit_build_timeout'] || 60
+      @bridges = ENV.has_key?('tor_bridges') ? ENV['tor_bridges'].split(';') : []
     end
 
     def data_directory
       "#{super}/#{port}"
     end
 
+    def config_path
+      "#{data_directory}-torrc"
+    end
+
     def start
       super
+      compile_config
       self.class.fire_and_forget(executable,
-                                 "--SocksPort #{port}",
-                                 "--NewCircuitPeriod #{new_circuit_period}",
-                                 "--MaxCircuitDirtiness #{max_circuit_dirtiness}",
-                                 "--CircuitBuildTimeout #{circuit_build_timeout}",
-                                 "--DataDirectory #{data_directory}",
-                                 "--PidFile #{pid_file}",
-                                 "--Log \"warn syslog\"",
-                                 '--RunAsDaemon 1',
-                                 "| logger -t 'tor' 2>&1")
+                                 "-f #{config_path}",
+                                 "| logger -t 'tor#{port}' 2>&1")
+    end
+
+    private
+    def compile_config
+      File.write(config_path, ERB.new(File.read(@config_erb_path)).result(binding))
     end
   end
 
@@ -257,8 +263,8 @@ loop do
   proxies.each do |proxy|
     $logger.info "testing proxy #{proxy.id} (port #{proxy.port})"
     proxy.restart unless proxy.working?
-    $logger.info "sleeping for #{tor_instances} seconds"
-    sleep Integer(tor_instances)
+  $logger.info "sleeping for #{tor_instances} seconds"
+  sleep Integer(tor_instances)
   end
 
   $logger.info "sleeping for 60 seconds"

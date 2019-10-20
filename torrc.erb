@@ -1,0 +1,10 @@
+SocksPort <%= port %>
+NewCircuitPeriod <%= new_circuit_period %>
+MaxCircuitDirtiness <%= max_circuit_dirtiness %>
+CircuitBuildTimeout <%= circuit_build_timeout %>
+DataDirectory <%= data_directory %>
+PidFile <%= pid_file %>
+<% if bridges.length > 0 %>UseBridges 1
+ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy --managed<% bridges.each do |b| %>
+Bridge <%= b %><% end %><% end %>
+RunAsDaemon 1
