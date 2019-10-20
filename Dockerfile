@@ -12,6 +12,7 @@ RUN apk --update add --virtual build-dependencies ruby-bundler ruby-dev  \
   && rm -rf /var/cache/apk/*
 
 
+ADD torrc.erb       /usr/local/etc/torrc.erb
 ADD haproxy.cfg.erb /usr/local/etc/haproxy.cfg.erb
 ADD privoxy.cfg.erb /usr/local/etc/privoxy.cfg.erb
 
