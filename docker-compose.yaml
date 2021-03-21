@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  tp:
+    image: zeta0/alpine-tor
+    restart: unless-stopped
+    ports:
+      - "5566:5566"
+      - "2090:2090"  
+    environment:
+      tors: 10
