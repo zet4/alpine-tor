@@ -7,7 +7,7 @@ RUN apk add 'tor' --no-cache \
 
 RUN apk --update add --virtual build-dependencies ruby-bundler ruby-dev  \
   && apk add ruby-nokogiri --update-cache --repository http://dl-4.alpinelinux.org/alpine/v3.3/main/ \
-  && gem install --no-ri --no-rdoc socksify \
+  && gem install --no-document socksify \
   && apk del build-dependencies \
   && rm -rf /var/cache/apk/*
 
